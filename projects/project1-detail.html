@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جزئیات API - سیستم مدیریت فروشگاه</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .api-docs {
+            max-width: 1000px;
+            margin: 100px auto 50px;
+            padding: 2rem;
+            background: var(--bg-card);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+        .api-endpoint-detail {
+            background: var(--bg-primary);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border-right: 3px solid var(--purple-primary);
+        }
+        .method {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+        .method.get { background: #10B981; color: white; }
+        .method.post { background: #3B82F6; color: white; }
+        .method.put { background: #F59E0B; color: white; }
+        .method.delete { background: #EF4444; color: white; }
+        .endpoint-path {
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+        pre {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        code {
+            color: var(--text-secondary);
+        }
+        .back-button {
+            display: inline-block;
+            margin-bottom: 2rem;
+            padding: 0.5rem 1rem;
+            background: var(--purple-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="api-docs">
+        <a href="../index.html#projects" class="back-button">
+            <i class="fas fa-arrow-right"></i> بازگشت به پروژه‌ها
+        </a>
+        
+        <h1>مستندات API - سیستم مدیریت فروشگاه آنلاین</h1>
+        <p>این API یک فروشگاه آنلاین کامل را مدیریت می‌کند. تمام اندپوینت‌ها نیاز به توکن JWT دارند.</p>
+        
+        <h2><i class="fas fa-key"></i> احراز هویت</h2>
+        <div class="api-endpoint-detail">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/auth/login</span>
+            <pre><code>{
+    "email": "user@example.com",
+    "password": "yourpassword"
+}</code></pre>
+            <p><strong>پاسخ موفق:</strong></p>
+            <pre><code>{
+    "token": "eyJhbGciOiJIUzI1NiIs...",
+    "user": {
+        "id": 1,
+        "name": "کاربر نمونه",
+        "email": "user@example.com"
+    }
+}</code></pre>
+        </div>
+        
+        <h2><i class="fas fa-shopping-cart"></i> مدیریت محصولات</h2>
+        <div class="api-endpoint-detail">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/products</span>
+            <p>دریافت لیست تمام محصولات با قابلیت صفحه‌بندی</p>
+            <p><strong>پارامترهای اختیاری:</strong> page, limit, category, sort</p>
+        </div>
+        
+        <div class="api-endpoint-detail">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/products/{id}</span>
+            <p>دریافت جزئیات یک محصول خاص</p>
+        </div>
+        
+        <div class="api-endpoint-detail">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/products</span>
+            <p>ایجاد محصول جدید (فقط ادمین)</p>
+            <pre><code>{
+    "name": "نام محصول",
+    "price": 250000,
+    "category_id": 1,
+    "stock": 100,
+    "description": "توضیحات محصول"
+}</code></pre>
+        </div>
+        
+        <h2><i class="fas fa-shopping-basket"></i> سبد خرید</h2>
+        <div class="api-endpoint-detail">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/cart</span>
+            <p>دریافت محتویات سبد خرید کاربر جاری</p>
+        </div>
+        
+        <div class="api-endpoint-detail">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/cart/add</span>
+            <pre><code>{
+    "product_id": 5,
+    "quantity": 2
+}</code></pre>
+        </div>
+        
+        <h2><i class="fas fa-credit-card"></i> پرداخت</h2>
+        <div class="api-endpoint-detail">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/checkout</span>
+            <pre><code>{
+    "cart_id": 123,
+    "payment_method": "online",
+    "address_id": 5
+}</code></pre>
+            <p><strong>پاسخ موفق:</strong></p>
+            <pre><code>{
+    "order_id": 456,
+    "status": "pending",
+    "payment_url": "https://payment.gateway.com/pay/..."
+}</code></pre>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: rgba(124, 58, 237, 0.1); border-radius: 8px;">
+            <h3><i class="fas fa-download"></i> دانلود منابع</h3>
+            <button class="btn-download" onclick="downloadPostman()">
+                <i class="fas fa-download"></i> دانلود Collection پست‌من
+            </button>
+            <button class="btn-download" style="margin-right: 1rem;" onclick="downloadSource()">
+                <i class="fas fa-code"></i> دانلود کد منبع پروژه
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        function downloadPostman() {
+            alert('فایل Postman Collection دانلود می‌شود...');
+        }
+        
+        function downloadSource() {
+            alert('فایل ZIP کد منبع پروژه دانلود می‌شود...');
+        }
+    </script>
+</body>
+</html>
